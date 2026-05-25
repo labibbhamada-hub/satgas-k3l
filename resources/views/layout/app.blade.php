@@ -126,7 +126,7 @@
                 </nav>
             </header>
 
-            <div id="main-content">
+            <div id="main-content" class="py-0">
                 @yield('content')
 
                 <footer>
