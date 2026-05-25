@@ -1,0 +1,47 @@
+body {
+    background-color: #fff
+}
+
+#auth {
+    height: 100vh;
+    overflow-x: hidden
+}
+
+#auth #auth-right {
+    height: 100%;
+    padding: 40px;
+    /* ini yang bikin ada “margin dalam” */
+    background: linear-gradient(135deg, #6fcf97, #27ae60), url('../../images/bg/login-img.png');
+    background-size: contain;
+    /* biar tidak terlalu besar */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
+}
+
+#auth #auth-left {
+    padding: 5rem 8rem
+}
+
+#auth #auth-left .auth-title {
+    font-size: 2rem;
+}
+
+#auth #auth-left .auth-subtitle {
+    font-size: 1rem;
+    color: #a8aebb
+}
+
+#auth #auth-left .auth-logo {
+    margin-bottom: 7rem
+}
+
+#auth #auth-left .auth-logo img {
+    height: 2rem
+}
+
+@media screen and (max-width:767px) {
+    #auth #auth-left {
+        padding: 5rem
+    }
+}
