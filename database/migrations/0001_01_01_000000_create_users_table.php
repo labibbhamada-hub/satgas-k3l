@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('telp')->unique();
             $table->string('password');
-            $table->enum('role', ['dev', 'satgas', 'instansi'])->default('instansi');
+            $table->enum('role', ['dev', 'admin', 'satgas', 'instansi'])->default('instansi');
             $table->string('nama_instansi');
             $table->timestamps();
         });

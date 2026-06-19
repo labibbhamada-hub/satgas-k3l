@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="{{ asset('mazer/assets/css/app.css') }}">
 
     <link rel="stylesheet" href="{{ asset('mazer/assets/css/pages/auth.css') }}">
+
+    <link rel="shortcut icon" href="{{ asset('storage/asset/logo-bhamada-sm.png') }}" type="image/x-icon">
 </head>
 
 <body>
@@ -50,7 +52,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <button type="button" class="btn btn-primary btn-block rounded-0 mb-2" id="btn-submit"
+                        <button type="submit" class="btn btn-primary btn-block rounded-0 mb-2" id="btn-submit"
                             onclick="form_submit()">
                             <span id="btn-submit-text">
                                 Login
@@ -81,6 +83,17 @@
         @if ($errors->has('telp') || $errors->has('password'))
             Toastify({
                 text: "No. Telepon atau Password salah!",
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                close: true,
+                backgroundColor: "#dc3545",
+            }).showToast();
+        @endif
+
+        @if (session('error'))
+            Toastify({
+                text: "{{ session('error') }}",
                 duration: 3000,
                 gravity: "top",
                 position: "right",

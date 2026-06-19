@@ -1,10 +1,10 @@
 @extends('layout.app')
 
-@section('title', 'Data Laporan')
+@section('title', 'Data Prodi')
 
 @section('content')
     <div class="page-heading">
-        <h3>Data Laporan</h3>
+        <h3>Data Prodi</h3>
     </div>
     <div class="page-content">
         <section class="pb-5">
@@ -14,7 +14,7 @@
                         <div class="row justify-content-between align-items-center">
                             <div class="col-md-8 mb-4">
                                 <a href="{{ url('instansi/laporan/create') }}" class="btn btn-primary rounded-0">
-                                    Buat Laporan
+                                    Buat Prodi
                                 </a>
                             </div>
                             <div class="col-md-4 mb-4 text-end">
@@ -35,37 +35,28 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">No</th>
-                                    <th>Mahasiswa</th>
-                                    <th>Kejadian</th>
+                                    <th>Nama Prodi</th>
+                                    <th>Fakultas</th>
                                     <th>Status</th>
-                                    <th>Opsi</th>
+                                    <th class="text-center">Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($laporans as $laporan)
+                                @foreach ($prodis as $prodi)
                                     <tr>
-                                        <td class="text-center align-top">{{ $loop->iteration }}</td>
-                                        <td class="align-top">{{ $laporan->nama_mahasiswa }}</td>
-                                        <td class="align-top">
-                                            {{ $laporan->jenis_insiden }}
-                                            <hr class="my-1">
-                                            {{ $laporan->lokasi_kejadian }}
-                                        </td>
-                                        <td class="align-top">
-                                            @if ($laporan->status == 'dikirim')
-                                                <span class="badge bg-primary rounded-0">Dikirim</span>
-                                            @elseif ($laporan->status == 'diverifikasi')
-                                                <span class="badge bg-info rounded-0">Diverifikasi</span>
-                                            @elseif ($laporan->status == 'ditolak')
-                                                <span class="badge bg-danger rounded-0">Ditolak</span>
-                                            @elseif ($laporan->status == 'selesai')
-                                                <span class="badge bg-success rounded-0">Selesai</span>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td>{{ $prodi->nama }}</td>
+                                        <td>{{ strtoupper($prodi->fakultas) }}</td>
+                                        <td>
+                                            @if ($prodi->is_active)
+                                                <span class="badge bg-primary rounded-0">Aktif</span>
+                                            @else
+                                                <span class="badge bg-secondary rounded-0">Non Aktif</span>
                                             @endif
                                         </td>
-                                        <td class="align-top">
-                                            <a href="{{ url('instansi/laporan/' . $laporan->id) }}"
-                                                class="btn btn-outline-info btn-sm rounded-0">
-                                                Lihat
+                                        <td class="text-center">
+                                            <a href="#" class="btn btn-outline-warning btn-sm rounded-0">
+                                                Edit
                                             </a>
                                         </td>
                                     </tr>

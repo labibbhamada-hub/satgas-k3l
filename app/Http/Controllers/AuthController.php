@@ -33,7 +33,7 @@ class AuthController extends Controller
             return redirect()->intended('login');
         }
 
-        return back()->withInput();
+        return back()->withInput()->with('error', 'No. Telepon atau Password salah!');
     }
 
     public function logout(Request $request)
@@ -49,6 +49,7 @@ class AuthController extends Controller
     private function redirect_by_role(User $user)
     {
         return match ($user->role) {
+            'dev' => redirect('dev'),
             'admin' => redirect('admin'),
             'satgas' => redirect('satgas'),
             'instansi' => redirect('instansi'),

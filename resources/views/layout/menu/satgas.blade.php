@@ -12,4 +12,23 @@
             <span>Data Laporan</span>
         </a>
     </li>
+    <li class="sidebar-title">Lainnya</li>
+    <li class="sidebar-item {{ request()->is('satgas/instansi*') ? 'active' : '' }}">
+        <a href="{{ url('satgas/instansi') }}" class="sidebar-link rounded-0">
+            <i class="bi bi-building"></i>
+            <span>Data Instansi</span>
+        </a>
+    </li>
+    <li class="sidebar-item {{ request()->is('satgas/berita*') ? 'active' : '' }}">
+        <a href="{{ url('satgas/berita') }}" class="sidebar-link rounded-0">
+            <i class="bi bi-newspaper"></i>
+            <span>Data Berita</span>
+        </a>
+    </li>
+    <li class="sidebar-item {{ request()->is('satgas/pelatihan*') ? 'active' : '' }}">
+        <a href="{{ url('satgas/pelatihan') }}" class="sidebar-link rounded-0">
+            <i class="bi bi-book"></i>
+            <span>Data Pelatihan</span>
+        </a>
+    </li>
 </ul>

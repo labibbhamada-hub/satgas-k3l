@@ -11,7 +11,8 @@ return new class extends Migration
         Schema::create('prodis', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->enum('fakultas', ['fikes', 'fbst'])->default('fikes');
+            $table->enum('fakultas', ['fikes', 'fbst', 'fph']);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

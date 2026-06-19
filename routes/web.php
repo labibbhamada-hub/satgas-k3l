@@ -1,9 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', function () {
     return view('index');
+});
+
+Route::get('/optimize-clear', function () {
+    Artisan::call('optimize:clear');
+    return redirect('/')->with('success', 'Optimize clear executed');
+});
+
+Route::get('/storage-link', function () {
+    Artisan::call('storage:link');
+    return redirect('/')->with('success', 'Storage link created');
 });
 
 Route::get('login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
@@ -20,10 +31,21 @@ Route::post('perbarui-password', [\App\Http\Controllers\AuthController::class, '
 //     return view('admin.index');
 // });
 
+Route::middleware('dev')->prefix('dev')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Dev\HomeController::class, 'index']);
+
+    Route::resource('prodi', \App\Http\Controllers\Dev\ProdiController::class);
+});
+
 Route::middleware('satgas')->prefix('satgas')->group(function () {
     Route::get('/', [\App\Http\Controllers\Satgas\HomeController::class, 'index']);
 
+    Route::get('laporan/print/{id}', [\App\Http\Controllers\Satgas\LaporanController::class, 'print']);
+    Route::get('instansi/selesaikan/{id}', [\App\Http\Controllers\Satgas\LaporanController::class, 'selesaikan']);
     Route::resource('laporan', \App\Http\Controllers\Satgas\LaporanController::class);
+
+    Route::get('instansi/reset-password/{id}', [\App\Http\Controllers\Satgas\InstansiController::class, 'reset_password']);
+    Route::resource('instansi', \App\Http\Controllers\Satgas\InstansiController::class);
 });
 
 Route::middleware('instansi')->prefix('instansi')->group(function () {

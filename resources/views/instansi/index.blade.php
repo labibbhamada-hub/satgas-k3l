@@ -7,8 +7,8 @@
         <h3>Dashboard</h3>
     </div>
     <div class="page-content">
-        <section>
-            <div class="alert alert-light rounded-0">
+        <section class="pb-5">
+            <div class="alert alert-light rounded-0 mb-3">
                 <h4 class="alert-heading">Selamat Datang 👋</h4>
                 <p>
                     Selamat datang di
@@ -19,66 +19,50 @@
                 </p>
             </div>
             <div class="row">
-                <div class="col-4">
-                    <div class="card rounded-0">
-                        <div class="card-body px-3 py-4-5">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="stats-icon blue rounded-0">
-                                        <i class="iconly-boldDocument"></i>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="card rounded-0 mb-3">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="stats-icon orange rounded-0 me-3">
+                                        <i class="iconly-boldTime-Circle"></i>
                                     </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Data Laporan</h6>
-                                    <h6 class="font-extrabold mb-0">12</h6>
+                                    <div>
+                                        <h6 class="text-muted font-semibold mb-1">Laporan Menunggu</h6>
+                                        <h6 class="font-extrabold mb-0">{{ $laporan_menunggu }}</h6>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-4">
-                    <div class="card rounded-0">
-                        <div class="card-body px-3 py-4-5">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="stats-icon purple rounded-0">
-                                        <i class="iconly-boldPaper"></i>
+                    <div class="col-sm-4">
+                        <div class="card rounded-0 mb-3">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="stats-icon purple rounded-0 me-3">
+                                        <i class="iconly-boldActivity"></i>
                                     </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Data Berita</h6>
-                                    <h6 class="font-extrabold mb-0">20</h6>
+                                    <div>
+                                        <h6 class="text-muted font-semibold mb-1">Laporan Proses</h6>
+                                        <h6 class="font-extrabold mb-0">{{ $laporan_proses }}</h6>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-4">
-                    <div class="card rounded-0">
-                        <div class="card-body px-3 py-4-5">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="stats-icon green rounded-0">
-                                        <i class="iconly-boldPlay"></i>
+                    <div class="col-sm-4">
+                        <div class="card rounded-0 mb-3">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="stats-icon green rounded-0 me-3">
+                                        <i class="iconly-boldTick-Square"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-muted font-semibold mb-1">Laporan Selesai</h6>
+                                        <h6 class="font-extrabold mb-0">{{ $laporan_selesai }}</h6>
                                     </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <h6 class="text-muted font-semibold">Data Pelatihan</h6>
-                                    <h6 class="font-extrabold mb-0">8</h6>
-                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card rounded-0">
-                        <div class="card-header">
-                            <h4>Statistik Kunjungan</h4>
-                        </div>
-                        <div class="card-body">
-                            <div id="chart-profile-visit"></div>
                         </div>
                     </div>
                 </div>

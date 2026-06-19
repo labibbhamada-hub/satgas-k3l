@@ -12,7 +12,7 @@
                 <div class="card-content">
                     <div class="card-body">
                         <form class="form form-vertical" action="{{ url('perbarui-profile') }}" method="POST"
-                            autocomplete="off">
+                            autocomplete="off" id="form-submit">
                             @csrf
                             <div class="form-body">
                                 <div class="row">
@@ -60,7 +60,18 @@
                                         </div>
                                     </div>
                                     <div class="col-12 d-flex justify-content-end mt-4">
-                                        <button type="submit" class="btn btn-primary rounded-0">Simpan</button>
+                                        <button type="button" class="btn btn-primary rounded-0" id="btn-submit"
+                                            onclick="form_submit()">
+                                            <span id="btn-submit-text">
+                                                Simpan
+                                            </span>
+                                            <span id="btn-submit-load" style="display: none;">
+                                                <span class="d-inline-flex align-items-center">
+                                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                                    Memproses...
+                                                </span>
+                                            </span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -70,4 +81,15 @@
             </div>
         </section>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        function form_submit() {
+            $('#btn-submit').prop('disabled', true);
+            $('#btn-submit-text').hide();
+            $('#btn-submit-load').show();
+            $('#form-submit').submit();
+        }
+    </script>
 @endsection

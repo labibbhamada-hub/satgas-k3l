@@ -16,9 +16,10 @@
                                 <div class="input-group mb-3">
                                     <input type="search" class="form-control rounded-0" placeholder="Cari Instansi"
                                         aria-label="Cari Instansi" aria-describedby="keyword">
-                                    <button class="btn btn-outline-secondary rounded-0" type="button" id="keyword"
-                                        name="keyword">
-                                        Cari
+                                    <button
+                                        class="btn btn-outline-secondary rounded-0 d-flex align-items-center justify-content-center"
+                                        type="button" id="keyword" name="keyword">
+                                        <i class="bi bi-search"></i>
                                     </button>
                                 </div>
                             </div>
@@ -29,7 +30,7 @@
                         <table class="table mb-0 table-lg">
                             <thead>
                                 <tr>
-                                    <th>Instansi</th>
+                                    <th class="text-center">No</th>
                                     <th>Mahasiswa</th>
                                     <th>Kejadian</th>
                                     <th>Status</th>
@@ -37,21 +38,45 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="text-bold-500">RSUD Kardinah</td>
-                                    <td>Fitria Della</td>
-                                    <td class="text-bold-500">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis, eligendi.
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-success rounded-0">Selesai</span>
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-outline-info btn-sm rounded-0">
-                                            Lihat
-                                        </a>
-                                    </td>
-                                </tr>
+                                @foreach ($laporans as $laporan)
+                                    <tr>
+                                        <td class="text-center align-top">{{ $loop->iteration }}</td>
+                                        <td class="align-top">
+                                            {{ $laporan->nama_mahasiswa }}
+                                            <br>
+                                            {{ $laporan->prodi->nama }}
+                                        </td>
+                                        <td class="align-top">
+                                            {{ $laporan->jenis_insiden }}
+                                            <hr class="my-1">
+                                            {{ $laporan->lokasi_kejadian }}
+                                        </td>
+                                        <td class="align-top">
+                                            @if ($laporan->status == 'dikirim')
+                                                <span class="badge bg-primary rounded-0">Dikirim</span>
+                                            @elseif ($laporan->status == 'diverifikasi')
+                                                <span class="badge bg-info rounded-0">Diverifikasi</span>
+                                            @elseif ($laporan->status == 'ditolak')
+                                                <span class="badge bg-danger rounded-0">Ditolak</span>
+                                            @elseif ($laporan->status == 'selesai')
+                                                <span class="badge bg-success rounded-0">Selesai</span>
+                                            @endif
+                                        </td>
+                                        <td class="align-top">
+                                            @if ($laporan->status == 'dikirim')
+                                                <a href="{{ url('satgas/laporan/' . $laporan->id) }}"
+                                                    class="btn btn-outline-warning btn-sm rounded-0">
+                                                    Verifikasi
+                                                </a>
+                                            @else
+                                                <a href="{{ url('satgas/laporan/' . $laporan->id) }}"
+                                                    class="btn btn-outline-info btn-sm rounded-0">
+                                                    Lihat
+                                                </a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
