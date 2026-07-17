@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Validator;
 
 class LaporanController extends Controller
 {
-    public function index()
+    public function buat_laporan()
     {
         $laporans = Laporan::latest()
             ->with('prodi')
             ->get();
 
-        return view('satgas.laporan.index', compact('laporans'));
+        return view('buat-laporan', compact('laporans'));
     }
 
     public function show(int $id)

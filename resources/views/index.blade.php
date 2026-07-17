@@ -833,16 +833,6 @@
                         <a class="nav-link rounded-0" href="#kegiatan">Kegiatan</a>
                     </li>
                 </ul>
-                <div class="navbar-actions">
-                    <a href="{{ url('login') }}" class="btn btn-outline-blue">
-                        @if (auth()->check())
-                            {{ auth()->user()->nama_instansi }}
-                        @else
-                            Login
-                        @endif
-                    </a>
-                    {{-- <a href="#" class="btn btn-danger"><i class="fas fa-clipboard-list"></i> Buat Laporan</a> --}}
-                </div>
             </div>
         </div>
     </nav>
@@ -858,11 +848,11 @@
                         <p class="lead">Sistem terintegrasi pelaporan insiden, edukasi keselamatan, dan pemantauan K3L
                             untuk seluruh civitas akademika.</p>
                         <div class="hero-buttons">
-                            <a href="#" class="btn btn-danger">
+                            <a href="{{ url('buat-laporan') }}" class="btn btn-danger">
                                 <i class="fas fa-clipboard-list"></i>
                                 Buat Laporan
                             </a>
-                            <a href="#" class="btn btn-outline-blue">
+                            <a href="{{ url('status-laporan') }}" class="btn btn-outline-blue">
                                 <i class="fas fa-search"></i>
                                 Cek Status Laporan
                             </a>

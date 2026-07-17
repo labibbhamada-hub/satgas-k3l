@@ -7,6 +7,8 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::get('buat-laporan', [\App\Http\Controllers\Satgas\LaporanController::class, 'buat_laporan']);
+
 Route::get('/optimize-clear', function () {
     Artisan::call('optimize:clear');
     return redirect('/')->with('success', 'Optimize clear executed');
