@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layout Vertical 1 Column - Mazer</title>
+    <title>Pilih Kategori Laporan</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('mazer/assets/css/bootstrap.css') }}">
@@ -81,7 +81,9 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-center">
-                        <button class="btn btn-light-primary rounded-0">Buat Laporan</button>
+                        <a href="{{ url('buat-laporan/praktik-lainnya') }}" class="btn btn-light-primary rounded-0">
+                            Buat Laporan
+                        </a>
                     </div>
                 </div>
             </div>

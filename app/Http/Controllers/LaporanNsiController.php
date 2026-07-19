@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Satgas;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Laporan;
@@ -10,15 +10,15 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class LaporanController extends Controller
+class LaporanNsiController extends Controller
 {
-    public function buat_laporan()
+    public function index()
     {
-        $laporans = Laporan::latest()
-            ->with('prodi')
-            ->get();
-
-        return view('satgas.laporan.index', compact('laporans'));
+        if (auth()->check() && auth()->user()->role == 'instansi') {
+            return redirect('instansi/laporan');
+        } else {
+            return redirect('login');
+        }
     }
 
     public function show(int $id)

@@ -7,15 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class AuthController extends Controller
+class LaporanController extends Controller
 {
-    public function login()
+    public function buat_laporan()
     {
-        if (!Auth::check()) {
-            return view('login');
-        }
-
-        return $this->redirect_by_role(Auth::user());
+        return view('buat-laporan');
     }
 
     public function login_proses(Request $request)

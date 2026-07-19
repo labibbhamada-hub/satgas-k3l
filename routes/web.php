@@ -7,7 +7,10 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('buat-laporan', [\App\Http\Controllers\Satgas\LaporanController::class, 'buat_laporan']);
+Route::get('buat-laporan', [\App\Http\Controllers\LaporanController::class, 'buat_laporan']);
+
+Route::get('buat-laporan/nsi', [\App\Http\Controllers\LaporanNsiController::class, 'index']);
+Route::get('buat-laporan/area-kampus', [\App\Http\Controllers\LaporanAreaKampusController::class, 'index']);
 
 Route::get('/optimize-clear', function () {
     Artisan::call('optimize:clear');

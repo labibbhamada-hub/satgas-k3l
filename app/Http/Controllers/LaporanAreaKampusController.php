@@ -1,35 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Satgas;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Laporan;
+use App\Models\Prodi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class LaporanController extends Controller
+class LaporanAreaKampusController extends Controller
 {
-    public function buat_laporan()
+    public function index()
     {
-        $laporans = Laporan::latest()
-            ->with('prodi')
+        $prodis = Prodi::where('is_active', true)
             ->get();
-
-        return view('satgas.laporan.index', compact('laporans'));
-    }
-
-    public function show(int $id)
-    {
-        $laporan = Laporan::with(['user', 'prodi'])->findOrFail($id);
-
-        if ($laporan->status == 'dikirim') {
-            return view('satgas.laporan.show_dikirim', compact('laporan'));
-        } else {
-            return view('satgas.laporan.show', compact('laporan'));
-        }
+            
+        return view('laporan.area-kampus.index', compact('prodis'));
     }
 
     public function update(Request $request, int $id)
