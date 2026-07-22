@@ -3,15 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
-Route::get('/', function () {
-    return view('index');
-});
-
-Route::get('buat-laporan', [\App\Http\Controllers\LaporanController::class, 'buat_laporan']);
-
-Route::get('buat-laporan/nsi', [\App\Http\Controllers\LaporanNsiController::class, 'index']);
-Route::get('buat-laporan/area-kampus', [\App\Http\Controllers\LaporanAreaKampusController::class, 'index']);
-
 Route::get('/optimize-clear', function () {
     Artisan::call('optimize:clear');
     return redirect('/')->with('success', 'Optimize clear executed');
@@ -25,6 +16,18 @@ Route::get('/storage-link', function () {
 Route::get('login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
 Route::post('login', [\App\Http\Controllers\AuthController::class, 'login_proses']);
 Route::post('logout', [\App\Http\Controllers\AuthController::class, 'logout'])->middleware('auth');
+
+Route::get('/', [\App\Http\Controllers\HomeController::class, 'index']);
+
+Route::get('buat-laporan', [\App\Http\Controllers\LaporanController::class, 'buat_laporan']);
+
+Route::get('buat-laporan/nsi', [\App\Http\Controllers\LaporanNsiController::class, 'index']);
+
+Route::get('buat-laporan/area-kampus/success', [\App\Http\Controllers\LaporanAreaKampusController::class, 'success']);
+Route::resource('buat-laporan/area-kampus', \App\Http\Controllers\LaporanAreaKampusController::class);
+
+Route::get('buat-laporan/praktik-lainnya/success', [\App\Http\Controllers\LaporanPraktikLainnyaController::class, 'success']);
+Route::resource('buat-laporan/praktik-lainnya', \App\Http\Controllers\LaporanPraktikLainnyaController::class);
 
 Route::get('perbarui-profile', [\App\Http\Controllers\AuthController::class, 'perbarui_profile'])->middleware('auth');
 Route::post('perbarui-profile', [\App\Http\Controllers\AuthController::class, 'perbarui_profile_proses'])->middleware('auth');
@@ -45,10 +48,16 @@ Route::middleware('dev')->prefix('dev')->group(function () {
 Route::middleware('satgas')->prefix('satgas')->group(function () {
     Route::get('/', [\App\Http\Controllers\Satgas\HomeController::class, 'index']);
 
-    Route::get('laporan/print/{id}', [\App\Http\Controllers\Satgas\LaporanController::class, 'print']);
-    Route::get('instansi/selesaikan/{id}', [\App\Http\Controllers\Satgas\LaporanController::class, 'selesaikan']);
-    Route::resource('laporan', \App\Http\Controllers\Satgas\LaporanController::class);
+    Route::get('laporan-nsi/print/{id}', [\App\Http\Controllers\Satgas\LaporanController::class, 'print']);
+    Route::resource('laporan-nsi', \App\Http\Controllers\Satgas\LaporanController::class);
 
+    Route::get('laporan-area-kampus/print/{id}', [\App\Http\Controllers\Satgas\LaporanAreaKampusController::class, 'print']);
+    Route::resource('laporan-area-kampus', \App\Http\Controllers\Satgas\LaporanAreaKampusController::class);
+
+    Route::get('laporan-praktik-lainnya/print/{id}', [\App\Http\Controllers\Satgas\LaporanPraktikLainnyaController::class, 'print']);
+    Route::resource('laporan-praktik-lainnya', \App\Http\Controllers\Satgas\LaporanPraktikLainnyaController::class);
+
+    Route::get('instansi/selesaikan/{id}', [\App\Http\Controllers\Satgas\LaporanController::class, 'selesaikan']);
     Route::get('instansi/reset-password/{id}', [\App\Http\Controllers\Satgas\InstansiController::class, 'reset_password']);
     Route::resource('instansi', \App\Http\Controllers\Satgas\InstansiController::class);
 });

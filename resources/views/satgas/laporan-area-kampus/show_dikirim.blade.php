@@ -1,34 +1,58 @@
 @extends('layout.app')
 
-@section('title', 'Lihat Laporan')
+@section('title', 'Verifikasi Laporan')
 
 @section('content')
-    <div class="page-heading mb-4">
+    <div class="page-heading">
         <h3>
-            <a href="{{ url('satgas/laporan-nsi') }}"
+            <a href="{{ url('satgas/laporan') }}"
                 class="btn btn-secondary rounded-0 d-inline-flex align-items-center justify-content-center me-2"
                 style="width: 40px; height: 38px;">
                 <i class="bi bi-arrow-left"></i>
             </a>
-            Lihat Laporan
+            Verifikasi Laporan
         </h3>
     </div>
     <div class="page-content">
         <section class="pb-5">
-            <div class="text-end mb-4">
-                @if ($laporan->status == 'diverifikasi')
-                    <button type="button" class="btn btn-outline-primary rounded-0 me-2"data-bs-toggle="modal"
-                        data-bs-target="#modal-selesaikan">
-                        Selesaikan
-                    </button>
-                @endif
-                <a href="{{ url('satgas/laporan-nsi/print/' . $laporan->id) }}"
-                    class="btn btn-outline-dark rounded-0 d-inline-flex align-items-center justify-content-center"
-                    style="width: 38px; height: 38px;" target="_blank">
-                    <i class="bi bi-printer"></i>
-                </a>
+            <div class="card rounded-0">
+                <div class="card-content">
+                    <div class="card-header border-bottom pb-3">
+                        <h4>Tindak Lanjut</h4>
+                    </div>
+                    <form action="{{ url('satgas/laporan/' . $laporan->id) }}" method="POST" id="form-submit">
+                        @csrf
+                        @method('PUT')
+                        <div class="card-body py-3">
+                            <div class="form-group mb-2">
+                                <label for="catatan_verifikasi">Catatan Verifikasi *</label>
+                                <textarea class="form-control rounded-0 @error('catatan_verifikasi') is-invalid @enderror" rows="4"
+                                    name="catatan_verifikasi" id="catatan_verifikasi">{{ old('catatan_verifikasi') }}</textarea>
+                                @error('catatan_verifikasi')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary rounded-0" id="btn-submit"
+                                onclick="form_submit()">
+                                <span id="btn-submit-text">
+                                    Konfirmasi Laporan
+                                </span>
+                                <span id="btn-submit-load" style="display: none;">
+                                    <span class="d-inline-flex align-items-center">
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                        Memproses...
+                                    </span>
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="card rounded-0 mb-4">
+            <div class="card rounded-0">
                 <div class="card-content">
                     <div class="card-header border-bottom pb-3 d-flex justify-content-between align-items-center">
                         <h4>Detail Laporan</h4>
@@ -65,6 +89,13 @@
                                     <strong>No. Telepon</strong>
                                     <br>
                                     {{ $laporan->user->telp }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <strong>Tanggal Laporan</strong>
+                                    <br>
+                                    {{ Carbon\Carbon::parse($laporan->tanggal_laporan)->translatedFormat('d F Y') }}
                                 </div>
                             </div>
                         </div>
@@ -165,7 +196,7 @@
                         <div class="mb-2">
                             <strong>Dampak / Cedera Yang Dialami</strong>
                             <br>
-                            {!! nl2br(e($laporan->kronologi)) !!}
+                            {!! nl2br(e($laporan->dampak)) !!}
                         </div>
                     </div>
                     <div class="card-body border-top py-3">
@@ -197,99 +228,12 @@
                     </div>
                 </div>
             </div>
-            <div class="card rounded-0 mb-4">
-                <div class="card-content">
-                    <div class="card-header border-bottom pb-3">
-                        <h4>Tindak Lanjut</h4>
-                    </div>
-                    <div class="card-body py-3">
-                        <div class="mb-2">
-                            <strong>Catatan Verifikasi</strong>
-                            <br>
-                            {!! nl2br(e($laporan->catatan_verifikasi)) !!}
-                        </div>
-                    </div>
-                    <div class="card-body border-top py-3">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-2">
-                                    <strong>Tanggal Laporan</strong>
-                                    <br>
-                                    {{ Carbon\Carbon::parse($laporan->tanggal_laporan)->translatedFormat('d F Y') }}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-2">
-                                    <strong>Tanggal Verifikasi</strong>
-                                    <br>
-                                    {{ Carbon\Carbon::parse($laporan->tanggal_verifikasi)->translatedFormat('d F Y') }}
-                                </div>
-                            </div>
-                            @if ($laporan->status == 'selesai')
-                                <div class="col-md-6">
-                                    <div class="mb-2">
-                                        <strong>Tanggal Selesai</strong>
-                                        <br>
-                                        {{ Carbon\Carbon::parse($laporan->tanggal_selesai)->translatedFormat('d F Y') }}
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
         </section>
-    </div>
-    <div class="modal fade text-left" id="modal-selesaikan" tabindex="-1" role="dialog" aria-labelledby="Hapus Instansi"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content rounded-0">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="Hapus Instansi">Hapus Instansi</h5>
-                    <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
-                        <i data-feather="x"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        Yakin selesaikan laporan dari
-                        <strong>{{ $laporan->user->nama_instansi }}</strong>?
-                    </p>
-                </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <button type="button" class="btn rounded-0" data-bs-dismiss="modal">
-                        Batal
-                    </button>
-                    <form action="{{ url('satgas/instansi/selesaikan/' . $laporan->id) }}" method="GET"
-                        id="form-selesaikan">
-                        <button type="button" class="btn btn-primary rounded-0" id="btn-selesaikan"
-                            onclick="form_selesaikan()">
-                            <span id="btn-selesaikan-text">
-                                Selesaikan
-                            </span>
-                            <span id="btn-selesaikan-load" style="display: none;">
-                                <span class="d-inline-flex align-items-center">
-                                    <span class="spinner-border spinner-border-sm me-2"></span>
-                                    Memproses...
-                                </span>
-                            </span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection
 
 @section('script')
     <script>
-        function form_selesaikan() {
-            $('#btn-selesaikan').prop('disabled', true);
-            $('#btn-selesaikan-text').hide();
-            $('#btn-selesaikan-load').show();
-            $('#form-selesaikan').submit();
-        }
-
         function form_submit() {
             $('#btn-submit').prop('disabled', true);
             $('#btn-submit-text').hide();

@@ -4,32 +4,27 @@ namespace App\Http\Controllers\Satgas;
 
 use App\Http\Controllers\Controller;
 use App\Models\Laporan;
+use App\Models\LaporanAreaKampus;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class LaporanController extends Controller
+class LaporanAreaKampusController extends Controller
 {
     public function index()
     {
-        $laporans = Laporan::latest()
-            ->with('prodi')
-            ->get();
+        $laporans = LaporanAreaKampus::latest()->get();
 
-        return view('satgas.laporan.index', compact('laporans'));
+        return view('satgas.laporan-area-kampus.index', compact('laporans'));
     }
 
     public function show(int $id)
     {
-        $laporan = Laporan::with(['user', 'prodi'])->findOrFail($id);
+        $laporan = LaporanAreaKampus::findOrFail($id);
 
-        if ($laporan->status == 'dikirim') {
-            return view('satgas.laporan.show_dikirim', compact('laporan'));
-        } else {
-            return view('satgas.laporan.show', compact('laporan'));
-        }
+        return view('satgas.laporan-area-kampus.show', compact('laporan'));
     }
 
     public function update(Request $request, int $id)
@@ -82,10 +77,10 @@ class LaporanController extends Controller
 
     public function print(int $id)
     {
-        $laporan = Laporan::with(['user', 'prodi'])->findOrFail($id);
+        $laporan = LaporanAreaKampus::findOrFail($id);
         $satgas = User::where('role', 'satgas')->first();
 
-        $pdf = Pdf::loadview('satgas.laporan.print', compact('laporan', 'satgas'));
+        $pdf = Pdf::loadview('satgas.laporan-area-kampus.print', compact('laporan', 'satgas'));
         return $pdf->stream('Form Laporan Insiden Kecelakaan Kerja.pdf');
     }
 }

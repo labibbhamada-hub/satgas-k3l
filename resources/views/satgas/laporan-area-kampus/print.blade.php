@@ -180,47 +180,20 @@
         <tr>
             <td class="td">&nbsp;</td>
             <td class="td" style="width: 20px;">1.</td>
-            <td class="td" style="width: 120px;">Nama Mahasiswa</td>
+            <td class="td" style="width: 140px;">Nama Mahasiswa</td>
             <td class="td" style="width: 20px;">:</td>
-            <td class="td">{{ $laporan->nama_mahasiswa }}</td>
+            <td class="td">{{ $laporan->korban_nama }}</td>
         </tr>
         <tr>
             <td class="td">&nbsp;</td>
             <td class="td">2.</td>
-            <td class="td">Program Studi</td>
+            <td class="td">Unit / Program Studi</td>
             <td class="td">:</td>
-            <td class="td">{{ $laporan->prodi->nama }}</td>
+            <td class="td">{{ $laporan->korban_bagian }}</td>
         </tr>
         <tr>
             <td class="td">&nbsp;</td>
             <td class="td">3.</td>
-            <td class="td">Tempat Praktik</td>
-            <td class="td">:</td>
-            <td class="td">{{ $laporan->user->nama_instansi }}</td>
-        </tr>
-        <tr>
-            <td class="td">&nbsp;</td>
-            <td class="td">4.</td>
-            <td class="td">Jenis Kelamin</td>
-            <td class="td">:</td>
-            <td class="td">
-                @if ($laporan->gender == 'L')
-                    Laki-laki
-                @else
-                    Perempuan
-                @endif
-            </td>
-        </tr>
-        <tr>
-            <td class="td">&nbsp;</td>
-            <td class="td">5.</td>
-            <td class="td">Usia</td>
-            <td class="td">:</td>
-            <td class="td">{{ $laporan->usia }} Tahun</td>
-        </tr>
-        <tr>
-            <td class="td">&nbsp;</td>
-            <td class="td">6.</td>
             <td class="td">Tanggal Laporan</td>
             <td class="td">:</td>
             <td class="td">{{ Carbon\Carbon::parse($laporan->tanggal_laporan)->translatedFormat('l, d F Y') }}</td>
@@ -238,9 +211,9 @@
             <td class="td" style="width: 260px;">Tanggal dan Jam Kejadian</td>
             <td class="td" style="width: 20px;">:</td>
             <td class="td">
-                {{ Carbon\Carbon::parse($laporan->tanggal_kejadian)->translatedFormat('l, d F Y') }}
+                {{ Carbon\Carbon::parse($laporan->kejadian_tanggal)->translatedFormat('l, d F Y') }}
                 pukul
-                {{ Carbon\Carbon::parse($laporan->jam_kejadian)->format('H.i') }}
+                {{ Carbon\Carbon::parse($laporan->kejadian_jam)->format('H.i') }}
                 WIB
             </td>
         </tr>
@@ -249,14 +222,14 @@
             <td class="td">2.</td>
             <td class="td">Lokasi Kejadian</td>
             <td class="td">:</td>
-            <td class="td">{{ $laporan->lokasi_kejadian }}</td>
+            <td class="td">{{ $laporan->kejadian_lokasi }}</td>
         </tr>
         <tr>
             <td class="td">&nbsp;</td>
             <td class="td">3.</td>
             <td class="td">Jenis Insiden</td>
             <td class="td">:</td>
-            <td class="td">{{ $laporan->jenis_insiden }}</td>
+            <td class="td">{{ $laporan->kejadian_jenis }}</td>
         </tr>
         <tr>
             <td class="td">&nbsp;</td>
@@ -267,7 +240,7 @@
         </tr>
         <tr>
             <td class="td" colspan="2">&nbsp;</td>
-            <td class="td" colspan="3">{!! nl2br(e($laporan->kronologi)) !!}</td>
+            <td class="td" colspan="3">{!! nl2br(e($laporan->kejadian_kronologi)) !!}</td>
         </tr>
         <tr>
             <td class="td">&nbsp;</td>
@@ -278,22 +251,7 @@
         </tr>
         <tr>
             <td class="td" colspan="2">&nbsp;</td>
-            <td class="td" colspan="3">{!! nl2br(e($laporan->dampak)) !!}</td>
-        </tr>
-        <tr>
-            <td class="td">&nbsp;</td>
-            <td class="td">6.</td>
-            <td class="td">Tingkat Keparahan</td>
-            <td class="td">:</td>
-            <td class="td">
-                @if ($laporan->tingkat_keparahan == 1)
-                    Rendah
-                @elseif ($laporan->tingkat_keparahan == 2)
-                    Sedang
-                @elseif ($laporan->tingkat_keparahan == 3)
-                    Tinggi
-                @endif
-            </td>
+            <td class="td" colspan="3">{!! nl2br(e($laporan->kejadian_dampak)) !!}</td>
         </tr>
         <tr>
             <td class="td">&nbsp;</td>
@@ -304,7 +262,7 @@
         </tr>
         <tr>
             <td class="td" colspan="2">&nbsp;</td>
-            <td class="td" colspan="3">{!! nl2br(e($laporan->tindakan)) !!}</td>
+            <td class="td" colspan="3">{!! nl2br(e($laporan->penanganan_tindakan)) !!}</td>
         </tr>
         <tr>
             <td class="td">&nbsp;</td>
@@ -327,28 +285,6 @@
             </td>
         </tr>
     </table>
-    <table class="table" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
-        <tr>
-            <td class="td" style="font-weight: bold; width: 20px;">C.</td>
-            <td class="td" style="font-weight: bold;" colspan="3">VERIFIKASI SATGAS K3L</td>
-        </tr>
-        <tr>
-            <td class="td">&nbsp;</td>
-            <td class="td" style="width: 130px;">Status Verifikasi</td>
-            <td class="td" style="width: 20px;">:</td>
-            <td class="td">Disetujui</td>
-        </tr>
-        <tr>
-            <td class="td">&nbsp;</td>
-            <td class="td">Catatan Verifikasi</td>
-            <td class="td">:</td>
-            <td class="td">&nbsp;</td>
-        </tr>
-        <tr>
-            <td class="td">&nbsp;</td>
-            <td class="td" colspan="3">{{ $laporan->catatan_verifikasi }}</td>
-        </tr>
-    </table>
     <br><br>
     <table width="100%">
         <tr>
@@ -359,7 +295,7 @@
                 <div style="display: inline-block; text-align: center;">
                     Pelapor
                     <br><br><br>
-                    ({{ $laporan->user->nama }})
+                    ({{ $laporan->pelapor_nama }})
                 </div>
             </td>
             <td style="text-align: right;">

@@ -832,6 +832,13 @@
                     <li class="nav-item">
                         <a class="nav-link rounded-0" href="#kegiatan">Kegiatan</a>
                     </li>
+                    <!-- Button Login -->
+                    <li>
+                        <a href="{{ url('login') }}" class="btn btn-outline-blue">
+                            <i class="fas fa-right-to-bracket"></i>
+                            Login
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -852,24 +859,20 @@
                                 <i class="fas fa-clipboard-list"></i>
                                 Buat Laporan
                             </a>
-                            <a href="{{ url('status-laporan') }}" class="btn btn-outline-blue">
-                                <i class="fas fa-search"></i>
-                                Cek Status Laporan
-                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="hero-image-wrapper">
+                    <div class="">
                         <img src="{{ asset('storage/asset/img-1.png') }}" alt="Foto Satgas K3L 1" loading="lazy">
-                        <div class="hero-float-badge">
+                        {{-- <div class="hero-float-badge">
                             <i class="fas fa-check-circle text-success fs-5"></i>
                             <div>
                                 <strong>Terverifikasi</strong>
                                 <br>
                                 <small class="text-muted">ISO 45001:2018</small>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -884,26 +887,10 @@
                         <div class="qc-icon" style="background:#DBEAFE; color:#1D4ED8;">
                             <i class="fas fa-inbox"></i>
                         </div>
-                        <h4>1,234</h4>
+                        <h4>
+                            {{ $jumlah_laporan }}
+                        </h4>
                         <p>Laporan Masuk</p>
-                    </div>
-                </div>
-                <div class="col-6 col-sm-4 col-md-2" data-aos="zoom-in">
-                    <div class="quick-card">
-                        <div class="qc-icon" style="background:#FEF3C7; color:#D97706;">
-                            <i class="fas fa-spinner"></i>
-                        </div>
-                        <h4>567</h4>
-                        <p>Laporan Proses</p>
-                    </div>
-                </div>
-                <div class="col-6 col-sm-4 col-md-2" data-aos="zoom-in">
-                    <div class="quick-card">
-                        <div class="qc-icon" style="background:#DCFCE7; color:#15803D;">
-                            <i class="fas fa-circle-check"></i>
-                        </div>
-                        <h4>567</h4>
-                        <p>Laporan Selesai</p>
                     </div>
                 </div>
                 <div class="col-6 col-sm-4 col-md-2" data-aos="zoom-in">

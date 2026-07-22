@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ asset('mazer/assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('mazer/assets/css/app.css') }}">
+
+    <link rel="shortcut icon" href="{{ asset('storage/asset/logo-bhamada-sm.png') }}" type="image/x-icon">
 </head>
 
 <body>

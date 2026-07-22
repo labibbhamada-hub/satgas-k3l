@@ -64,12 +64,12 @@
                                         </td>
                                         <td class="align-top">
                                             @if ($laporan->status == 'dikirim')
-                                                <a href="{{ url('satgas/laporan/' . $laporan->id) }}"
+                                                <a href="{{ url('satgas/laporan-nsi/' . $laporan->id) }}"
                                                     class="btn btn-outline-warning btn-sm rounded-0">
                                                     Verifikasi
                                                 </a>
                                             @else
-                                                <a href="{{ url('satgas/laporan/' . $laporan->id) }}"
+                                                <a href="{{ url('satgas/laporan-nsi/' . $laporan->id) }}"
                                                     class="btn btn-outline-info btn-sm rounded-0">
                                                     Lihat
                                                 </a>

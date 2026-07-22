@@ -5,7 +5,7 @@
 @section('content')
     <div class="page-heading">
         <h3>
-            <a href="{{ url('satgas/laporan') }}"
+            <a href="{{ url('satgas/laporan-nsi') }}"
                 class="btn btn-secondary rounded-0 d-inline-flex align-items-center justify-content-center me-2"
                 style="width: 40px; height: 38px;">
                 <i class="bi bi-arrow-left"></i>
@@ -20,7 +20,7 @@
                     <div class="card-header border-bottom pb-3">
                         <h4>Tindak Lanjut</h4>
                     </div>
-                    <form action="{{ url('satgas/laporan/' . $laporan->id) }}" method="POST" id="form-submit">
+                    <form action="{{ url('satgas/laporan-nsi/' . $laporan->id) }}" method="POST" id="form-submit">
                         @csrf
                         @method('PUT')
                         <div class="card-body py-3">

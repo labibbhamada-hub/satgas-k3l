@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Kecelakaan Area Kampus</title>
+    <title>Laporan Kecelakaan Lahan Praktik Lainnya</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('mazer/assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('mazer/assets/css/app.css') }}">
+
     <link rel="shortcut icon" href="{{ asset('storage/asset/logo-bhamada-sm.png') }}" type="image/x-icon">
 
     <link rel="stylesheet" href="{{ asset('mazer/assets/vendors/toastify/toastify.css') }}">
@@ -28,9 +29,9 @@
 
     <div class="container pb-5">
         <div class="text-center pb-3">
-            <h3>Laporan Kecelakaan Area Kampus</h3>
+            <h3>Laporan Kecelakaan Lahan Praktik Lainnya</h3>
         </div>
-        <form action="{{ url('buat-laporan/area-kampus') }}" method="POST" autocomplete="off" id="form-submit">
+        <form action="{{ url('buat-laporan/praktik-lainnya') }}" method="POST" autocomplete="off" id="form-submit">
             @csrf
             <!-- Pelapor -->
             <div class="card rounded-0">
@@ -132,6 +133,20 @@
                                     class="form-control rounded-0 @error('kejadian_jam') is-invalid @enderror"
                                     name="kejadian_jam" id="kejadian_jam" value="{{ old('kejadian_jam') }}">
                                 @error('kejadian_jam')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-2">
+                                <label for="kejadian_tempat">Tempat Praktik *</label>
+                                <input type="text"
+                                    class="form-control rounded-0 @error('kejadian_tempat') is-invalid @enderror"
+                                    name="kejadian_tempat" id="kejadian_tempat"
+                                    value="{{ old('kejadian_tempat') }}">
+                                @error('kejadian_tempat')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
