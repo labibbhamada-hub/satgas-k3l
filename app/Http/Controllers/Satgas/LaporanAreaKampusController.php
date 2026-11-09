@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Satgas;
 
 use App\Http\Controllers\Controller;
-use App\Models\Laporan;
+
 use App\Models\LaporanAreaKampus;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -36,43 +36,43 @@ class LaporanAreaKampusController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return back()->withInput()->withErrors($validator->errors())->with('error', 'Gagal mengonfirmasi Laporan!');
+            return back()
+                ->withInput()
+                ->withErrors($validator->errors())
+                ->with('error', 'Gagal mengonfirmasi Laporan!');
         }
 
-        $laporan = Laporan::where('id', $id)->update([
-            'catatan_verifikasi' => $request->catatan_verifikasi,
-            'tanggal_verifikasi' => Carbon::now(),
-            'status' => 'diverifikasi'
-        ]);
+        $validated = $validator->validated();
 
-        if (!$laporan) {
-            return back()->withInput()->with('error', 'Gagal mengonfirmasi Laporan!');
+        $updated = LaporanAreaKampus::where('id', $id)
+            ->where('status', 'dikirim')
+            ->update([
+                'catatan_verifikasi' => $validated['catatan_verifikasi'],
+                'tanggal_verifikasi' => Carbon::now(),
+                'status' => 'diverifikasi',
+            ]);
+
+        if (!$updated) {
+            return back()->withInput()->with('error', 'Laporan tidak ditemukan atau sudah diproses.');
         }
 
-        return redirect('satgas/laporan-nsi')->with('success', 'Berhasil mengonfirmasi Laporan');
+        return redirect('satgas/laporan-area-kampus')->with('success', 'Berhasil mengonfirmasi Laporan');
     }
 
     public function selesaikan(int $id)
     {
-        $cek = Laporan::where([
-            ['id', $id],
-            ['status', 'diverifikasi'],
-        ])->first();
+        $updated = LaporanAreaKampus::where('id', $id)
+            ->where('status', 'diverifikasi')
+            ->update([
+                'tanggal_selesai' => Carbon::now(),
+                'status' => 'selesai',
+            ]);
 
-        if (!$cek) {
-            return back()->with('error', 'Gagal menyelesaikan Laporan');
+        if (!$updated) {
+            return back()->with('error', 'Laporan tidak ditemukan atau belum diverifikasi.');
         }
 
-        $laporan = Laporan::where('id', $id)->update([
-            'tanggal_selesai' => Carbon::now(),
-            'status' => 'selesai'
-        ]);
-
-        if (!$laporan) {
-            return back()->withInput()->with('error', 'Gagal menyelesaikan Laporan!');
-        }
-
-        return redirect('satgas/laporan-nsi')->with('success', 'Berhasil menyelesaikan Laporan');
+        return redirect('satgas/laporan-area-kampus')->with('success', 'Berhasil menyelesaikan Laporan');
     }
 
     public function print(int $id)

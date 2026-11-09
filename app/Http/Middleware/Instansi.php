@@ -10,14 +10,14 @@ class Instansi
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check()) {
-            if ($request->user()->isInstansi()) {
-                return $next($request);
-            } else {
-                return redirect('/');
-            }
-        } else {
-            return redirect('/');
+        if (!$request->user()) {
+            return redirect()->route('login');
         }
+
+        if (!$request->user()->isInstansi()) {
+            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
+        }
+
+        return $next($request);
     }
 }

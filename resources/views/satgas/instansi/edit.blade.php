@@ -93,19 +93,18 @@
                         <strong>{{ $user->nama_instansi }}</strong>?
                     </p>
                     <div class="mt-4">
-                        * Password default
-                        <strong>bhamada</strong>
+                        Password sementara akan dibuat secara otomatis oleh sistem.
+                        Pengguna wajib mengganti password saat login berikutnya.
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                     <button type="button" class="btn rounded-0" data-bs-dismiss="modal">
                         Batal
                     </button>
-                    <form action="{{ url('satgas/instansi/reset-password/' . $user->id) }}" method="GET" id="form-reset">
+                    <form action="{{ route('instansi.reset-password', $user->id) }}" method="POST" id="form-reset">
+                        @csrf
                         <button type="button" class="btn btn-warning rounded-0" id="btn-reset" onclick="form_reset()">
-                            <span id="btn-reset-text">
-                                Reset
-                            </span>
+                            <span id="btn-reset-text">Reset</span>
                             <span id="btn-reset-load" style="display: none;">
                                 <span class="d-inline-flex align-items-center">
                                     <span class="spinner-border spinner-border-sm me-2"></span>

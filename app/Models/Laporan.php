@@ -26,7 +26,7 @@ class Laporan extends Model
         'tanggal_verifikasi',
         'tanggal_selesai',
         'status',
-        'catatan_verikasi',
+        'catatan_verifikasi',
     ];
 
     public function user()
@@ -37,5 +37,10 @@ class Laporan extends Model
     public function prodi()
     {
         return $this->belongsTo(Prodi::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(LaporanFile::class);
     }
 }

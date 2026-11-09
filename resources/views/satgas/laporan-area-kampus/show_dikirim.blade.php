@@ -20,7 +20,7 @@
                     <div class="card-header border-bottom pb-3">
                         <h4>Tindak Lanjut</h4>
                     </div>
-                    <form action="{{ url('satgas/laporan/' . $laporan->id) }}" method="POST" id="form-submit">
+                    <form action="{{ url('satgas/laporan-area-kampus/' . $laporan->id) }}" method="POST" id="form-submit">
                         @csrf
                         @method('PUT')
                         <div class="card-body py-3">

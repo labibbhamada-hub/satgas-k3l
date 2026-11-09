@@ -10,14 +10,14 @@ class Dev
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check()) {
-            if ($request->user()->isDev()) {
-                return $next($request);
-            } else {
-                return redirect('/');
-            }
-        } else {
-            return redirect('/');
+        if (!$request->user()) {
+            return redirect()->route('login');
         }
+
+        if (!$request->user()->isDev()) {
+            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
+        }
+
+        return $next($request);
     }
 }

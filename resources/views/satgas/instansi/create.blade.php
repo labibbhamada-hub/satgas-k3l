@@ -51,8 +51,10 @@
                             @enderror
                         </div>
                         <div class="mt-4">
-                            * Password default
-                            <strong>bhamada</strong>
+                            <small class="text-muted">
+                                Password sementara akan dibuat otomatis oleh sistem
+                                dan wajib diganti oleh Instansi setelah login pertama.
+                            </small>
                         </div>
                     </div>
                     <div class="card-footer">

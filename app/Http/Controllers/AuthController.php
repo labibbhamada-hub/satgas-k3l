@@ -11,29 +11,51 @@ class AuthController extends Controller
 {
     public function login()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return view('login');
         }
 
-        return $this->redirect_by_role(Auth::user());
+        $user = Auth::user();
+
+        if ($user->must_change_password) {
+            return redirect()->route('password.edit');
+        }
+
+        return $this->redirect_by_role($user);
     }
 
     public function login_proses(Request $request)
     {
         $request->validate([
-            'telp' => 'required',
-            'password' => 'required',
+            'telp' => ['required'],
+            'password' => ['required'],
         ], [
             'telp.required' => 'No. Telepon harus diisi!',
             'password.required' => 'Password harus diisi!',
         ]);
 
-        if (Auth::attempt($request->only('telp', 'password'))) {
-            $request->session()->regenerate();
-            return redirect()->intended('login');
+        $credentials = [
+            'telp' => $request->telp,
+            'password' => $request->password,
+            'is_active' => true,
+        ];
+
+        if (! Auth::attempt($credentials)) {
+            return back()
+                ->withInput($request->only('telp'))
+                ->with('error', 'No. Telepon atau Password salah!');
         }
 
-        return back()->withInput()->with('error', 'No. Telepon atau Password salah!');
+        $request->session()->regenerate();
+
+        $user = Auth::user();
+
+        // Pengguna dengan password sementara wajib menggantinya.
+        if ($user->must_change_password) {
+            return redirect()->route('password.edit');
+        }
+
+        return $this->redirect_by_role($user);
     }
 
     public function logout(Request $request)
@@ -50,7 +72,6 @@ class AuthController extends Controller
     {
         return match ($user->role) {
             'dev' => redirect('dev'),
-            'admin' => redirect('admin'),
             'satgas' => redirect('satgas'),
             'instansi' => redirect('instansi'),
             default => $this->invalid_role(),
@@ -73,30 +94,47 @@ class AuthController extends Controller
 
     public function perbarui_profile_proses(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nama_instansi' => 'required',
+        $user = Auth::user();
+
+        $rules = [
             'nama' => 'required',
-            'telp' => 'required|unique:users,telp,' . auth()->user()->id,
-        ], [
-            'nama_instansi.required' => 'Nama Instansi harus diisi!',
-            'nama.required' => 'Nama Penanggung Jawab harus diisi!',
+            'telp' => 'required|unique:users,telp,' . $user->id,
+        ];
+
+        $messages = [
+            'nama.required' => 'Nama harus diisi!',
             'telp.required' => 'No. Telepon harus diisi!',
             'telp.unique' => 'No. Telepon sudah digunakan!',
-        ]);
+        ];
+
+        // Nama Instansi hanya diwajibkan untuk akun Instansi.
+        if ($user->role === 'instansi') {
+            $rules['nama_instansi'] = 'required';
+            $messages['nama_instansi.required'] = 'Nama Instansi harus diisi!';
+        }
+
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return back()->withInput()->withErrors($validator->errors())->with('error', 'Gagal memperbarui Profile!');
+            return back()
+                ->withInput()
+                ->withErrors($validator->errors())
+                ->with('error', 'Gagal memperbarui Profile!');
         }
 
-        $user = User::where('id', auth()->user()->id)->update([
-            'nama_instansi' => $request->nama_instansi,
-            'nama' => $request->nama,
-            'telp' => $request->telp,
-        ]);
+        $validated = $validator->validated();
 
-        if (!$user) {
-            return back()->withInput()->withErrors($validator->errors())->with('error', 'Gagal memperbarui Profile!');
+        $data = [
+            'nama' => $validated['nama'],
+            'telp' => $validated['telp'],
+        ];
+
+        // Hanya akun Instansi yang memperbarui nama_instansi.
+        if ($user->role === 'instansi') {
+            $data['nama_instansi'] = $validated['nama_instansi'];
         }
+
+        $user->fill($data)->save();
 
         return back()->with('success', 'Berhasil memperbarui Profile!');
     }
@@ -108,27 +146,46 @@ class AuthController extends Controller
 
     public function perbarui_password_proses(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'password' => 'required',
-            'password_confirmation' => 'required|same:password',
-        ], [
-            'password.required' => 'Password harus diisi!',
-            'password_confirmation.required' => 'Konfirmasi Password harus diisi!',
-            'password_confirmation.same' => 'Konfirmasi Password tidak sama!',
-        ]);
+        $user = Auth::user();
 
-        if ($validator->fails()) {
-            return back()->withInput()->withErrors($validator->errors())->with('error', 'Gagal memperbarui Password!');
+        $rules = [
+            'password' => [
+                'required',
+                'string',
+                'min:6',
+                'confirmed',
+            ],
+        ];
+
+        $messages = [
+            'password.required' => 'Password baru harus diisi!',
+            'password.min' => 'Password baru minimal 6 karakter!',
+            'password.confirmed' => 'Konfirmasi password tidak sama!',
+        ];
+
+        // Password lama hanya diperlukan untuk perubahan password normal.
+        if (! $user->must_change_password) {
+            $rules['current_password'] = [
+                'required',
+                'current_password',
+            ];
+
+            $messages['current_password.required'] = 'Password saat ini harus diisi!';
+            $messages['current_password.current_password'] = 'Password saat ini salah!';
         }
 
-        $user = User::where('id', auth()->user()->id)->update([
-            'password' => bcrypt($request->password),
-        ]);
+        $validated = $request->validate($rules, $messages);
 
-        if (!$user) {
-            return back()->withInput()->withErrors($validator->errors())->with('error', 'Gagal memperbarui Password!');
-        }
+        // Model cast "hashed" akan menangani hashing password.
+        $user->forceFill([
+            'password' => $validated['password'],
+            'must_change_password' => false,
+        ])->save();
 
-        return back()->with('success', 'Berhasil memperbarui Password!');
+        // Regenerasi session setelah perubahan kredensial.
+        $request->session()->regenerate();
+
+        return $this->redirect_by_role($user)
+            ->with('success', 'Password berhasil diperbarui!');
     }
 }

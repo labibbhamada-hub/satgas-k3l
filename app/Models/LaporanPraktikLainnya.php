@@ -25,6 +25,6 @@ class LaporanPraktikLainnya extends Model
         'tanggal_verifikasi',
         'tanggal_selesai',
         'status',
-        'catatan_verikasi',
+        'catatan_verifikasi',
     ];
 }

@@ -6,9 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Laporan;
 use App\Models\Prodi;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class InstansiController extends Controller
 {
@@ -23,18 +22,17 @@ class InstansiController extends Controller
 
     public function create()
     {
-        $prodis = Prodi::where('is_active', true)
-            ->get();
+        $prodis = Prodi::where('is_active', true)->get();
 
         return view('satgas.instansi.create', compact('prodis'));
     }
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nama_instansi' => 'required',
-            'nama' => 'required',
-            'telp' => 'required|unique:users,telp',
+        $validated = $request->validate([
+            'nama_instansi' => ['required', 'string', 'max:255'],
+            'nama' => ['required', 'string', 'max:255'],
+            'telp' => ['required', 'string', 'max:255', 'unique:users,telp'],
         ], [
             'nama_instansi.required' => 'Nama Instansi harus diisi!',
             'nama.required' => 'Penanggung Jawab harus diisi!',
@@ -42,23 +40,27 @@ class InstansiController extends Controller
             'telp.unique' => 'No. Telepon sudah digunakan!',
         ]);
 
-        if ($validator->fails()) {
-            return back()->withInput()->withErrors($validator->errors())->with('error', 'Gagal menambahkan Instansi!');
-        }
+        $temporaryPassword = Str::random(32);
 
-        $user = User::create([
-            'nama_instansi' => $request->nama_instansi,
-            'nama' => $request->nama,
-            'telp' => $request->telp,
-            'password' => bcrypt('bhamada'),
+        $user = new User([
+            'nama_instansi' => $validated['nama_instansi'],
+            'nama' => $validated['nama'],
+            'telp' => $validated['telp'],
+            'password' => $temporaryPassword,
             'role' => 'instansi',
         ]);
 
-        if (!$user) {
-            return back()->withInput()->with('error', 'Gagal menambahkan Instansi!');
-        }
+        $user->forceFill([
+            'must_change_password' => true,
+        ]);
 
-        return redirect('satgas/instansi')->with('success', 'Berhasil menambahkan Instansi');
+        $user->save();
+
+        return redirect()
+            ->route('instansi.index')
+            ->with('success', 'Berhasil menambahkan Instansi.')
+            ->with('temporary_password', $temporaryPassword)
+            ->with('temporary_password_for', $user->nama_instansi);
     }
 
     public function show(int $id)
@@ -70,24 +72,21 @@ class InstansiController extends Controller
 
     public function edit(int $id)
     {
-        $user = User::where([
-            ['id', $id],
-            ['role', 'instansi']
-        ])->first();
-
-        if (!$user) {
-            return back()->with('error', 'Gagal menemukan Instansi!');
-        }
+        $user = User::where('id', $id)
+            ->where('role', 'instansi')
+            ->firstOrFail();
 
         return view('satgas.instansi.edit', compact('user'));
     }
 
     public function update(Request $request, int $id)
     {
-        $validator = Validator::make($request->all(), [
-            'nama_instansi' => 'required',
-            'nama' => 'required',
-            'telp' => 'required|unique:users,telp,' . $id,
+        $user = User::where('role', 'instansi')->findOrFail($id);
+
+        $validated = $request->validate([
+            'nama_instansi' => ['required', 'string', 'max:255'],
+            'nama' => ['required', 'string', 'max:255'],
+            'telp' => ['required', 'string', 'max:255', 'unique:users,telp,' . $id],
         ], [
             'nama_instansi.required' => 'Nama Instansi harus diisi!',
             'nama.required' => 'Penanggung Jawab harus diisi!',
@@ -95,62 +94,49 @@ class InstansiController extends Controller
             'telp.unique' => 'No. Telepon sudah digunakan!',
         ]);
 
-        if ($validator->fails()) {
-            return back()->withInput()->withErrors($validator->errors())->with('error', 'Gagal memperbarui Instansi!');
-        }
+        $user->update($validated);
 
-        $user = User::where('id', $id)->update([
-            'nama_instansi' => $request->nama_instansi,
-            'nama' => $request->nama,
-            'telp' => $request->telp,
-        ]);
-
-        if (!$user) {
-            return back()->withInput()->with('error', 'Gagal memperbarui Instansi!');
-        }
-
-        return redirect('satgas/instansi')->with('success', 'Berhasil memperbarui Instansi');
+        return redirect('satgas/instansi')
+            ->with('success', 'Berhasil memperbarui Instansi.');
     }
 
-    public function destroy(int $id)
+    public function updateStatus(Request $request, int $id)
     {
-        $cek = User::where([
-            ['id', $id],
-            ['role', 'instansi']
-        ])->first();
+        $validated = $request->validate([
+            'is_active' => ['required', 'boolean'],
+        ]);
 
-        if (!$cek) {
-            return back()->with('error', 'Gagal menemukan Instansi!');
-        }
+        $user = User::where('role', 'instansi')
+            ->findOrFail($id);
 
-        $user = User::where('id', $id)->delete();
+        $user->forceFill([
+            'is_active' => $validated['is_active'],
+        ])->save();
 
-        if (!$user) {
-            return back()->with('error', 'Gagal menghapus Instansi!');
-        }
+        $message = $user->is_active
+            ? 'Berhasil mengaktifkan Instansi.'
+            : 'Berhasil menonaktifkan Instansi.';
 
-        return back()->with('success', 'Berhasil menghapus Instansi');
+        return back()->with('success', $message);
     }
 
     public function reset_password(int $id)
     {
-        $cek = User::where([
-            ['id', $id],
-            ['role', 'instansi']
-        ])->first();
+        $user = User::where('role', 'instansi')->findOrFail($id);
 
-        if (!$cek) {
-            return back()->with('error', 'Gagal menemukan Instansi!');
-        }
+        $temporaryPassword = Str::random(32);
 
-        $user = User::where('id', $id)->update([
-            'password' => bcrypt('bhamada')
+        $user->forceFill([
+            'password' => $temporaryPassword,
+            'must_change_password' => true,
         ]);
 
-        if (!$user) {
-            return back()->with('error', 'Gagal mereset Password!');
-        }
+        $user->save();
 
-        return redirect('satgas/instansi')->with('success', 'Berhasil mereset Password');
+        return redirect()
+            ->route('instansi.index')
+            ->with('success', 'Berhasil mereset password Instansi.')
+            ->with('temporary_password', $temporaryPassword)
+            ->with('temporary_password_for', $user->nama_instansi);
     }
 }

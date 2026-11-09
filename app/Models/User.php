@@ -26,21 +26,28 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'must_change_password' => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 
-    public function isDev()
+    public function isDev(): bool
     {
         return $this->role === 'dev';
     }
 
-    public function isSatgas()
+    public function isSatgas(): bool
     {
         return $this->role === 'satgas';
     }
 
-    public function isInstansi()
+    public function isInstansi(): bool
     {
         return $this->role === 'instansi';
+    }
+
+    public function laporans()
+    {
+        return $this->hasMany(Laporan::class);
     }
 }

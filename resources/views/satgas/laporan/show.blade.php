@@ -260,8 +260,8 @@
                     <button type="button" class="btn rounded-0" data-bs-dismiss="modal">
                         Batal
                     </button>
-                    <form action="{{ url('satgas/instansi/selesaikan/' . $laporan->id) }}" method="GET"
-                        id="form-selesaikan">
+                    <form action="{{ route('instansi.selesaikan', $laporan->id) }}" method="POST" id="form-selesaikan">
+                        @csrf
                         <button type="button" class="btn btn-primary rounded-0" id="btn-selesaikan"
                             onclick="form_selesaikan()">
                             <span id="btn-selesaikan-text">
